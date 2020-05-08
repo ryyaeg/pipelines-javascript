@@ -15,12 +15,20 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
   
-- task: PublishCodeCoverageResults@1
-  inputs: 
-    codeCoverageTool: JaCoCo
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
-
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    options: '--info'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    codeCoverageToolOption: 'JaCoCo'
+    codeCoverageClassFilesDirectories: 'build/classes/java/main'
+    tasks: 'build'
+  displayName: "Gradle build"
+  
 - script: |
     npm install
     npm run build
